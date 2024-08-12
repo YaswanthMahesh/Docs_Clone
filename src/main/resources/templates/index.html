@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Docs</title>
+</head>
+<body>
+
+<div>
+  <textarea></textarea>
+    <script>
+        // Connect to the WebSocket server
+        const ws = new WebSocket('ws://localhost:8080');
+
+        const textbox = document.getElementById('textbox');
+
+        // Send the content of the text box to the server whenever it changes
+        textbox.addEventListener('input', () => {
+            ws.send(textbox.value);
+        });
+
+        // Update the text box when a message is received from the server
+        ws.onmessage = (event) => {
+            textbox.value = event.data;
+        };
+    </script>
+</div>
+
+</body>
+</html>
