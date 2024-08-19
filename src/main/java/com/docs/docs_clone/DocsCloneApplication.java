@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.docs.docs_clone.Controller","com.docs.docs_clone.Configure"})
+@ComponentScan(basePackages = {"com.docs.docs_clone"})
 public class DocsCloneApplication {
 
 	public static void main(String[] args) {
