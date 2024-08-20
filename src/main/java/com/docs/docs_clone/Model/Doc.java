@@ -1,5 +1,6 @@
 package com.docs.docs_clone.Model;
 
+import org.bson.types.Binary;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "Docs")

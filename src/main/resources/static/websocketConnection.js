@@ -1,5 +1,6 @@
 var socket = new SockJS('/ws'); // Connect to the WebSocket endpoint
 var stompClient = Stomp.over(socket);
+//var doc;
 
 stompClient.connect({}, function (frame) {
     console.log('Connected: ' + frame);
@@ -9,6 +10,8 @@ stompClient.connect({}, function (frame) {
         console.log('Received: ' + message.body);
         document.getElementById('editor').value = message.body;
     });
+
+    stompClient.send("/app/getState",{});
 });
 
 function sendMessage() {
@@ -16,27 +19,41 @@ function sendMessage() {
     stompClient.send("/app/message", {}, message); // Send message to the server
 }
 
-document.getElementById('editor').addEventListener('input', sendMessage);
+// Make a GET request
+function apiCall(url,requestOptions) {
+    (requestOptions == null ? fetch(url) : fetch(url,requestOptions))
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        doc = data;
+        document.getElementById('editor').value = data.content;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+}
 
-//const socket = new WebSocket('ws://localhost:8080/ws');
-//
-//socket.onopen = function(event){
-//    alert('You are Connected to WebSocket Server');
-//};
-//
-//socket.onmessage = function(event){
-//    const outputDiv = document.getElementById('editor');
-//    outputDiv.innerHTML += `<p><b>"${event.data}"</b></p>`;
-//}
-//
-//socket.onclose = function (event) {
-//    console.log('Disconnected from WebSocket server');
-//};
-//
-//function sendMessage() {
-//    const messageInput = document
-//        .getElementById('editor');
-//    const message = messageInput.value;
-//    socket.send(message);
-//}
-//
+
+
+function save() {
+    doc.content = document.getElementById('editor').value;
+    const requestOptions = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(doc),
+    };
+    apiCall('http://localhost:8080/UpdateDoc',requestOptions);
+    sendMessage(); // Send message to the server
+}
+
+document.getElementById('editor').addEventListener('input', sendMessage);
+apiCall('http://localhost:8080/Docs/1',null);
+
+
