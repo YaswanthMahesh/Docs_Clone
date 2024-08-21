@@ -15,8 +15,16 @@ stompClient.connect({}, function (frame) {
 });
 
 function sendMessage() {
+//    var message = document.getElementById('editor').value;
+//    stompClient.send("/app/message", {}, message); // Send message to the server
+
     var message = document.getElementById('editor').value;
-    stompClient.send("/app/message", {}, message); // Send message to the server
+    var id = doc.id; // Assuming you have an input field for ID
+    var data = {
+        message: message,
+        id: id
+    };
+    stompClient.send("/app/message", {}, JSON.stringify(data));
 }
 
 // Make a GET request
@@ -49,11 +57,33 @@ function save() {
       },
       body: JSON.stringify(doc),
     };
-    apiCall('http://localhost:8080/UpdateDoc',requestOptions);
+    apiCall('/UpdateDoc',requestOptions);
     sendMessage(); // Send message to the server
 }
 
 document.getElementById('editor').addEventListener('input', sendMessage);
-apiCall('http://localhost:8080/Docs/1',null);
+apiCall('/Docs/1',null);
+
+window.addEventListener('beforeunload', () => {
+    fetch('/closeDoc/'+doc.id, {
+         method: 'PUT',
+         headers: {
+           'Content-Type': 'application/json',
+         }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('API request failed');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Handle the API response data
+        console.log(data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
 
 

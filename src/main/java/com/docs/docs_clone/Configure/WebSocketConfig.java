@@ -1,14 +1,23 @@
 package com.docs.docs_clone.Configure;
 
+import com.docs.docs_clone.Model.Doc;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+    @Bean
+    public ConcurrentHashMap<String, Doc> unsavedChangesMap() {
+        return new ConcurrentHashMap<>();
+    }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {

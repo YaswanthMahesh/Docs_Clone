@@ -1,23 +1,32 @@
 package com.docs.docs_clone.Model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.bson.types.Binary;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.PrintStream;
+import java.io.Serializable;
+
 @Document(collection = "Docs")
-public class Doc {
+public class Doc implements Serializable {
     private String id;
     private String docName;
     private String ownerName;
     private String ownerId;
-    private String Content;
+    private  int activeUsers;
+    private String content;
     private boolean editAccess;
 
-    public Doc(String ownerName, String ownerId) {
-        this.docName = "Untitled";
+
+    public Doc(String id, String docName, String ownerName, String ownerId, String content, boolean editAccess) {
+        this.id = id;
+        this.docName = docName;
         this.ownerName = ownerName;
         this.ownerId = ownerId;
-        Content = "";
-        this.editAccess = true;
+        this.activeUsers = 0;
+        this.content = content;
+        this.editAccess = editAccess;
     }
 
     public String getId() {
@@ -52,12 +61,20 @@ public class Doc {
         this.ownerId = ownerId;
     }
 
+    public int getActiveUsers() {
+        return activeUsers;
+    }
+
+    public void setActiveUsers(int activeUsers) {
+        this.activeUsers = activeUsers;
+    }
+
     public String getContent() {
-        return Content;
+        return content;
     }
 
     public void setContent(String content) {
-        Content = content;
+        this.content = content;
     }
 
     public boolean isEditAccess() {
@@ -71,10 +88,12 @@ public class Doc {
     @Override
     public String toString() {
         return "Doc{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", docName='" + docName + '\'' +
                 ", ownerName='" + ownerName + '\'' +
                 ", ownerId='" + ownerId + '\'' +
+                ", activeUsers=" + activeUsers +
+                ", content='" + content + '\'' +
                 ", editAccess=" + editAccess +
                 '}';
     }

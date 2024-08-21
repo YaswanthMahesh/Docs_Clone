@@ -7,10 +7,10 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class DocSyncController {
 
-    @MessageMapping("/message")
-    @SendTo("/topic/messages")
-    public String sendMessage(String message) {
-        System.out.println(message);
-        return message;
-    }
+//    @MessageMapping("/message")
+//    @SendTo("/topic/messages")
+//    public String sendMessage(String message) {
+//        System.out.println(message);
+//        return message;
+//    }
 }
