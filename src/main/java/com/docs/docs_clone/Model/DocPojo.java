@@ -1,32 +1,32 @@
 package com.docs.docs_clone.Model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.bson.types.Binary;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.io.PrintStream;
-import java.io.Serializable;
-
-@Document(collection = "Docs")
-public class Doc implements Serializable {
+public class DocPojo {
     private String id;
     private String docName;
     private String ownerName;
     private String ownerId;
+    private  int activeUsers;
     private String content;
     private boolean editAccess;
 
-
-    public Doc(String id, String docName, String ownerName, String ownerId, String content, boolean editAccess) {
-        this.id = id;
-        this.docName = docName;
-        this.ownerName = ownerName;
-        this.ownerId = ownerId;
-        this.content = content;
-        this.editAccess = editAccess;
+    public DocPojo(Doc doc) {
+        this.id = doc.getId();
+        this.docName = doc.getDocName();
+        this.ownerName = doc.getOwnerName();
+        this.ownerId = doc.getOwnerId();
+        this.activeUsers = 0;
+        this.content = doc.getContent();
+        this.editAccess = doc.isEditAccess();
     }
 
+    public Doc converToDoc(){
+        return new Doc(id,
+                docName,
+                ownerName,
+                ownerId,
+                content,
+                editAccess);
+    }
 
     public String getId() {
         return id;
@@ -60,6 +60,14 @@ public class Doc implements Serializable {
         this.ownerId = ownerId;
     }
 
+    public int getActiveUsers() {
+        return activeUsers;
+    }
+
+    public void setActiveUsers(int activeUsers) {
+        this.activeUsers = activeUsers;
+    }
+
     public String getContent() {
         return content;
     }
@@ -78,11 +86,12 @@ public class Doc implements Serializable {
 
     @Override
     public String toString() {
-        return "Doc{" +
+        return "DocPojo{" +
                 "id='" + id + '\'' +
                 ", docName='" + docName + '\'' +
                 ", ownerName='" + ownerName + '\'' +
                 ", ownerId='" + ownerId + '\'' +
+                ", activeUsers=" + activeUsers +
                 ", content='" + content + '\'' +
                 ", editAccess=" + editAccess +
                 '}';

@@ -1,6 +1,7 @@
 package com.docs.docs_clone.Controller;
 
 import com.docs.docs_clone.Model.Doc;
+import com.docs.docs_clone.Model.DocPojo;
 import com.docs.docs_clone.Model.MessageData;
 import com.docs.docs_clone.Repository.DocsRepository;
 import com.docs.docs_clone.Services.DocsService;
@@ -20,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CrudController {
 
 
-    private final ConcurrentHashMap<String, Doc> unsavedChangesMap;
+    private final ConcurrentHashMap<String, DocPojo> unsavedChangesMap;
     @Autowired
     DocsService docsService;
 
@@ -29,7 +30,7 @@ public class CrudController {
 
 
     @Autowired
-    public CrudController(ConcurrentHashMap<String, Doc> unsavedChangesMap) {
+    public CrudController(ConcurrentHashMap<String, DocPojo> unsavedChangesMap) {
         this.unsavedChangesMap = unsavedChangesMap;
     }
 
@@ -47,10 +48,10 @@ public class CrudController {
     }
 
     @GetMapping("/Docs/{id}")
-    public ResponseEntity<Doc> getDoc(@PathVariable String id){
-        Doc doc = unsavedChangesMap.getOrDefault(id,null);
+    public ResponseEntity<DocPojo> getDoc(@PathVariable String id){
+        DocPojo doc = unsavedChangesMap.getOrDefault(id,null);
         if(doc==null){
-            doc = docsService.getDocument(id);
+            doc = new DocPojo(docsService.getDocument(id));
             unsavedChangesMap.put(id,doc);
         }
         if(doc!=null) {
@@ -72,14 +73,18 @@ public class CrudController {
     }
 
     @PutMapping("/closeDoc/{id}")
-    public Doc closeDocs(@PathVariable String id){
-        Doc doc = unsavedChangesMap.get(id);
+    public ResponseEntity<DocPojo> closeDocs(@PathVariable String id){
+        System.out.println("Entered close doc");
+        DocPojo doc = unsavedChangesMap.get(id);
         doc.setActiveUsers(doc.getActiveUsers()-1);
         System.out.println("Active Users: " + doc.getActiveUsers());
-        if(doc.getActiveUsers()!=0)
-            return doc;
-        unsavedChangesMap.remove(doc);
-        return docsService.saveDocument(doc);
+        if(doc.getActiveUsers()==0) {
+            unsavedChangesMap.remove(id);
+            docsService.saveDocument(doc.converToDoc());
+            System.out.print("Clearing cache and ");
+        }
+        System.out.println("EOF close doc");
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(doc);
     }
 
 }

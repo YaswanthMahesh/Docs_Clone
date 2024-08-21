@@ -1,6 +1,7 @@
 package com.docs.docs_clone.Configure;
 
 import com.docs.docs_clone.Model.Doc;
+import com.docs.docs_clone.Model.DocPojo;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -15,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Bean
-    public ConcurrentHashMap<String, Doc> unsavedChangesMap() {
+    public ConcurrentHashMap<String, DocPojo> unsavedChangesMap() {
         return new ConcurrentHashMap<>();
     }
 
