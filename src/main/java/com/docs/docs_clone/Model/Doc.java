@@ -1,11 +1,7 @@
 package com.docs.docs_clone.Model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.bson.types.Binary;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.io.PrintStream;
 import java.io.Serializable;
 
 @Document(collection = "Docs")

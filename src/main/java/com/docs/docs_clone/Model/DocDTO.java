@@ -1,6 +1,6 @@
 package com.docs.docs_clone.Model;
 
-public class DocPojo {
+public class DocDTO {
     private String id;
     private String docName;
     private String ownerName;
@@ -9,7 +9,7 @@ public class DocPojo {
     private String content;
     private boolean editAccess;
 
-    public DocPojo(Doc doc) {
+    public DocDTO(Doc doc) {
         this.id = doc.getId();
         this.docName = doc.getDocName();
         this.ownerName = doc.getOwnerName();

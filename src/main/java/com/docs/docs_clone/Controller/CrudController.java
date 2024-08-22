@@ -1,7 +1,7 @@
 package com.docs.docs_clone.Controller;
 
 import com.docs.docs_clone.Model.Doc;
-import com.docs.docs_clone.Model.DocPojo;
+import com.docs.docs_clone.Model.DocDTO;
 import com.docs.docs_clone.Model.MessageData;
 import com.docs.docs_clone.Repository.DocsRepository;
 import com.docs.docs_clone.Services.DocsService;
@@ -14,14 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 public class CrudController {
 
 
-    private final ConcurrentHashMap<String, DocPojo> unsavedChangesMap;
+    private final ConcurrentHashMap<String, DocDTO> unsavedChangesMap;
     @Autowired
     DocsService docsService;
 
@@ -30,7 +29,7 @@ public class CrudController {
 
 
     @Autowired
-    public CrudController(ConcurrentHashMap<String, DocPojo> unsavedChangesMap) {
+    public CrudController(ConcurrentHashMap<String, DocDTO> unsavedChangesMap) {
         this.unsavedChangesMap = unsavedChangesMap;
     }
 
@@ -48,10 +47,10 @@ public class CrudController {
     }
 
     @GetMapping("/Docs/{id}")
-    public ResponseEntity<DocPojo> getDoc(@PathVariable String id){
-        DocPojo doc = unsavedChangesMap.getOrDefault(id,null);
+    public ResponseEntity<DocDTO> getDoc(@PathVariable String id){
+        DocDTO doc = unsavedChangesMap.getOrDefault(id,null);
         if(doc==null){
-            doc = new DocPojo(docsService.getDocument(id));
+            doc = new DocDTO(docsService.getDocument(id));
             unsavedChangesMap.put(id,doc);
         }
         if(doc!=null) {
@@ -73,9 +72,11 @@ public class CrudController {
     }
 
     @PutMapping("/closeDoc/{id}")
-    public ResponseEntity<DocPojo> closeDocs(@PathVariable String id){
+    public ResponseEntity<DocDTO> closeDocs(@PathVariable String id){
         System.out.println("Entered close doc");
-        DocPojo doc = unsavedChangesMap.get(id);
+        if(!unsavedChangesMap.containsKey(id))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON).body(null);
+        DocDTO doc = unsavedChangesMap.get(id);
         doc.setActiveUsers(doc.getActiveUsers()-1);
         System.out.println("Active Users: " + doc.getActiveUsers());
         if(doc.getActiveUsers()==0) {

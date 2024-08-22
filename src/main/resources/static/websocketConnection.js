@@ -1,6 +1,5 @@
 var socket = new SockJS('/ws'); // Connect to the WebSocket endpoint
 var stompClient = Stomp.over(socket);
-//var doc;
 
 stompClient.connect({}, function (frame) {
     console.log('Connected: ' + frame);
@@ -69,7 +68,8 @@ window.addEventListener('beforeunload', () => {
          method: 'PUT',
          headers: {
            'Content-Type': 'application/json',
-         }
+         },
+         keepalive: true
     })
     .then(response => {
         if (!response.ok) {

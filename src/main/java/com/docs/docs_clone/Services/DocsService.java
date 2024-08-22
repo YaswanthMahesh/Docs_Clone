@@ -1,17 +1,13 @@
 package com.docs.docs_clone.Services;
 
 import com.docs.docs_clone.Model.Doc;
-import com.docs.docs_clone.Model.DocPojo;
+import com.docs.docs_clone.Model.DocDTO;
 import com.docs.docs_clone.Repository.DocsRepository;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -19,12 +15,12 @@ public class DocsService {
 
     private static final String DOCUMENT_CACHE = "Document";
 
-    private final ConcurrentHashMap<String, DocPojo> unsavedChangesMap;
+    private final ConcurrentHashMap<String, DocDTO> unsavedChangesMap;
     @Autowired
     DocsRepository docsRepository;
 
     @Autowired
-    public DocsService(ConcurrentHashMap<String, DocPojo> unsavedChangesMap) {
+    public DocsService(ConcurrentHashMap<String, DocDTO> unsavedChangesMap) {
         this.unsavedChangesMap = unsavedChangesMap;
     }
 
